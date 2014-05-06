@@ -4,7 +4,7 @@ Project detects a users hand gestures of moving, grabbing, dragging, and droppin
 
 This GitHub Repo
 ----------------
-In the master branch of this repository, the hand-2-mouse-workspace folder should be pulled in to your local computer system and can be opened as an Eclipse workspace. This workspace contains the main projects for the application.
+In the master branch of this repository, the workspace folder should be pulled in to your local computer system and can be opened as an Eclipse workspace. This workspace contains the main projects for the application.
 
 Project Background and Overview
 -------------------------------
