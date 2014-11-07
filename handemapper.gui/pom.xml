@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>intel.handemapper.org</groupId>
+    <artifactId>handemapper.parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>handemapper.gui</artifactId>
+  <name>Hand-e-Mapper Graphical User Interface (GUI)</name>
+  <description>Provides a user interface to develop and analyze the Hand-e-Mapper recognition software.</description>
+  <dependencies>
+  	<dependency>
+  	  <groupId>intel.handemapper.org</groupId>
+  	  <artifactId>handemapper.common</artifactId>
+  	  <version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  	  <groupId>intel.handemapper.org</groupId>
+  	  <artifactId>handemapper.recognition</artifactId>
+  	  <version>${project.version}</version>
+  	</dependency>
+  </dependencies>
+  <build>
+    <finalName>Hand-e-Mapper</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>handemapper.MainEntry</mainClass>
+              <classpathPrefix>dependency-jars/</classpathPrefix>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      
+      <!-- Includes the runtime dependencies -->
+      <plugin>
+        <groupId>org.dstovall</groupId>
+        <artifactId>onejar-maven-plugin</artifactId>
+        <version>1.4.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>one-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    
+    </plugins>
+  </build>
+</project>

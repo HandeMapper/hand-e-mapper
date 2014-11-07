@@ -1,0 +1,186 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>intel.handemapper.org</groupId>
+  <artifactId>handemapper.parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Hand-e-Mapper Parent</name>
+  
+  <organization>
+  	<name>California Polytechnic State University</name>
+  	<url>http://www.calpoly.edu</url>
+  </organization>
+  
+  <inceptionYear>2014</inceptionYear>
+  <url>https://github.com/HandeMapper/hand-e-mapper</url>
+  <description>Project detects a user's hand gestures of moving, grabbing, dragging, and dropping using a basic web camera. This implements the Java version of OpenCV and once these gestures can be recognized reliably, they will be mapped to the mouse input device.</description>
+  
+  <licenses>
+    <license>
+      <name>BSD 2-Clause License</name>
+      <url>http://opensource.org/licenses/BSD-2-Clause</url>
+      <distribution>manual</distribution>
+      <comments>Open source initiative - Approved License</comments>
+    </license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <id>cnhartle</id>
+      <name>Christopher N. Hartley</name>
+      <email>cnhartle@calpoly.edu, chrisnhartley@gmail.com</email>
+      <url>https://www.linkedin.com/in/christophernhartley</url>
+      <organization>California Polytechnic State University</organization>
+      <organizationUrl>https://www.csc.calpoly.edu/</organizationUrl>
+      <roles>
+        <role>project manager</role>
+        <role>design lead</role>
+        <role>architect</role>
+      </roles>
+      <timezone>-8</timezone>
+    </developer>
+    
+    <developer>
+      <id>atmill</id>
+      <name>Adin Miller</name>
+      <email>amille35@calpoly.edu</email>
+      <organization>California Polytechnic State University</organization>
+      <organizationUrl>https://www.csc.calpoly.edu/</organizationUrl>
+      <roles>
+        <role>research lead</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-8</timezone>
+    </developer>
+    
+    <developer>
+      <id>hsaliba</id>
+      <name>Haikal Saliba</name>
+      <email>hsaliba@calpoly.edu</email>
+      <organization>California Polytechnic State University</organization>
+      <organizationUrl>https://www.csc.calpoly.edu/</organizationUrl>
+      <roles>
+        <role>implementations</role>
+        <role>programmer</role>
+      </roles>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
+  
+  <contributors>
+    <contributor>
+      <name>Dr. Franz J. Kurfess</name>
+      <email>fkurfess@calpoly.edu</email>
+      <url>https://www.csc.calpoly.edu/faculty/fkurfess/</url>
+      <organization>California Polytechnic State University</organization>
+      <organizationUrl>https://www.csc.calpoly.edu/</organizationUrl>
+      <roles>
+        <role>faculty advisor</role>
+      </roles>
+      <timezone>-8</timezone>
+    </contributor>
+    
+    <contributor>
+      <name>Dr. Carmen T. Badea</name>
+      <email>carmen.t.badea@intel.com</email>
+      <url>www.linkedin.com/pub/carmen-badea/2/60a/457</url>
+      <organization>Intel Corporation</organization>
+      <organizationUrl>http://www.intel.com/</organizationUrl>
+      <roles>
+        <role>project coordinator</role>
+        <role>project director</role>
+      </roles>
+      <timezone>-8</timezone>
+    </contributor>
+  </contributors>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.compiler.version>1.7</java.compiler.version>
+    <opencv.java.version>2.4.9-7</opencv.java.version>
+    <log4j.version>1.2.17</log4j.version>
+  </properties>
+  
+  <modules>
+    <module>handemapper.opencv</module>
+    <module>handemapper.gui</module>
+    <module>handemapper.recognition</module>
+    <module>handemapper.common</module>
+  </modules>
+  
+  <pluginRepositories>
+    <pluginRepository>
+        <id>onejar-maven-plugin.googlecode.com</id>
+        <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+    </pluginRepository>
+  </pluginRepositories>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- Plug-ins to manage... -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+            <!-- DO NOT include log4j.properties file in your Jar -->
+              <excludes>
+                <exclude>**/log4j.properties</exclude>
+              </excludes>
+           </configuration>
+         </plugin>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-dependency-plugin</artifactId>
+           <version>2.5.1</version>
+           <executions>
+             <execution>
+               <id>copy-dependencies</id>
+               <phase>package</phase>
+               <goals>
+                 <goal>copy-dependencies</goal>
+               </goals>
+               <configuration>
+                 <includeScope>runtime</includeScope>
+                 <outputDirectory>${project.build.directory}/dependency-jars/</outputDirectory>
+               </configuration>
+             </execution>
+           </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+      
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${java.compiler.version}</source>
+          <target>${java.compiler.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>${log4j.version}</version>
+    </dependency>
+  </dependencies>
+  
+</project>
