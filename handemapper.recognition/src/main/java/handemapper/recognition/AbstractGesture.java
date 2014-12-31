@@ -22,6 +22,8 @@
 package handemapper.recognition;
 
 import java.awt.Color;
+import java.util.UUID;
+
 import javax.swing.event.EventListenerList;
 
 import org.opencv.core.Mat;
@@ -93,6 +95,15 @@ public abstract class AbstractGesture implements Gesture {
 	private boolean enabled = true;
 	private String name = null;
 	private String desc = "";
+	
+	
+	/**
+	 * Constructor for a new instance of this gesture with the name set to a 
+	 * universally unique identifier (UUID) string.
+	 */
+	public AbstractGesture() {
+		this(UUID.randomUUID().toString(), null, true);
+	}
 	
 	
 	/**
@@ -217,6 +228,8 @@ public abstract class AbstractGesture implements Gesture {
 	 * <p>If the implementation detects the appropriate object(s), use the
 	 * {@link #fireGestureDetected(int, int, int)} method to notify the
 	 * registered {@link handemapper.recognition.event.GestureListener}s.
+	 * 
+	 * @see #fireGestureDetected(int, int, int)
 	 */
 	@Override
 	abstract public void detect(final Mat matrix);
@@ -228,38 +241,20 @@ public abstract class AbstractGesture implements Gesture {
 	}
 	
 	
-	/**
-	 * Sets the name for this instance of the gesture with the specified name
-	 * parameter.
-	 *  
-	 * @param name	The new name for this instance of the gesture.
-	 */
-	protected void setName(String name) {
+	@Override
+	public void setName(String name) {
 		this.name = name;
 	}
 	
 	
-	/**
-	 * Returns the description for this particular instance of the gesture as a
-	 * {@link String}. If no description has been set for the instance, a
-	 * zero-length {@link String} is returned.
-	 * 
-	 * @return	the description for this instance of the gesture.
-	 */
+	@Override
 	public String getDescription() {
 		return desc;
 	}
 	
 	
-	/**
-	 * Sets the description for this instance of the gesture with the specified
-	 * description parameter. If the parameter is {@code null}, the description
-	 * will be set to a zero-length {@link String}.
-	 * 
-	 * @param description	The detailed description for this instance of the
-	 * 						gesture.
-	 */
-	protected void setDescription(String description) {
+	@Override
+	public void setDescription(String description) {
 		this.desc = description == null ? "" : description;
 	}
 	

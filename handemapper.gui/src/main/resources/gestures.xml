@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- last update on November 8, 2014 -->
+<gestures xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="schema/gesturesXMLSchema.xsd">
+
+  <gesture>
+    <name>Hand Convexity/Contour Detection</name>
+    <description>Hand detection using convexity and contour analysis.</description>
+    <isEnabled>true</isEnabled>
+    <class>handemapper.recognition.types.HandRecognizer</class>
+  </gesture>
+  
+  <gesture>
+    <name>Hand+Face Detection</name>
+    <description>Hand detection using average skin tone from face detection.</description>
+    <isEnabled>false</isEnabled>
+    <class>handemapper.recognition.types.HaarClassifierGesture</class>
+    <parameters>
+      <parameter>
+        <name>classifier</name>
+        <description>Face classifier to help determine skin tone.</description>
+        <class>java.io.File</class>
+        <value>/classifiers/haarcascade_frontalface_default.xml</value>
+      </parameter>
+      <parameter>
+        <name>highlightColor</name>
+        <description>The highlight color of the face detection.</description>
+        <class>java.awt.Color</class>
+        <value>Color.RED</value>
+      </parameter>
+    </parameters>
+  </gesture>
+  
+</gestures>

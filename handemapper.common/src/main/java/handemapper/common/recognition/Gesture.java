@@ -4,16 +4,18 @@
 package handemapper.common.recognition;
 
 import handemapper.common.recognition.event.GestureListener;
+
 import java.io.Serializable;
+
 import org.opencv.core.Mat;
 
 
 /**
+ * 
  * @author Chris Hartley
- *
  */
 public interface Gesture extends Serializable {
-
+	
 	
 	/**
 	 * Returns the name for this particular instance of the gesture as a
@@ -23,6 +25,32 @@ public interface Gesture extends Serializable {
 	 */
 	public String getName();
 	
+	/**
+	 * Sets the name for this instance of the gesture with the specified name
+	 * parameter.
+	 *  
+	 * @param name	The new name for this instance of the gesture.
+	 */
+	public void setName(String name);
+	
+	/**
+	 * Returns the description for this particular instance of the gesture as a
+	 * {@link String}. If no description has been set for the instance, a
+	 * zero-length {@link String} is returned.
+	 * 
+	 * @return	the description for this instance of the gesture.
+	 */
+	public String getDescription();
+	
+	/**
+	 * Sets the description for this instance of the gesture with the specified
+	 * description parameter. If the parameter is {@code null}, the description
+	 * will be set to a zero-length {@link String}.
+	 * 
+	 * @param description	The detailed description for this instance of the
+	 * 						gesture.
+	 */
+	public void setDescription(String desc);
 	
 	/**
 	 * This method sets a flag indicating that the gesture implementation should
@@ -63,8 +91,7 @@ public interface Gesture extends Serializable {
 	 * 					camera through the OpenCV interface.
 	 * 
 	 * @see org.opencv.core.Mat
-	 * @see project.recognition.event.GestureListener
-	 * @see #fireGestureDetected(int, int, int)
+	 * @see handemapper.common.recognition.GestureRecognizer
 	 */
 	public void detect(final Mat matrix);
 	

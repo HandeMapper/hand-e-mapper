@@ -4,67 +4,42 @@
 package handemapper.gui.tray;
 
 import java.awt.AWTException;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import handemapper.common.recognition.Gesture;
 import handemapper.common.recognition.GestureRecognizer;
-import handemapper.common.recognition.event.GestureEvent;
-import handemapper.common.recognition.event.GestureListener;
-import handemapper.gui.panels.LogPanel;
-import handemapper.gui.panels.VideoCaptureMirrorPanel;
+import handemapper.gui.GestureApplication;
+import handemapper.gui.frames.LogFrame;
+import handemapper.gui.frames.VideoCapturePreviewFrame;
 import handemapper.gui.translation.HandGestureRobot;
-
-//import project.MainEntry;
-//import project.gui.common.VideoCaptureMirrorPanel;
-//import project.recognition.types.HaarClassifierGesture;
-//import project.util.HandGestureRobot;
+import handemapper.gui.util.Gestures;
 
 
 /**
- * 
+ * Provides the system tray application for the gesture detection graphical 
+ * user interface (GUI). This class implements the {@link Runnable} interface 
+ * to register the configured gestures to process.
  * 
  * @author Chris Hartley
  * @author Adin Miller
  */
-public class GestureTrayApp implements Runnable {
-	
-	/** Static log4j logger instance for this class. */
-	private static final Logger logger = LogManager.getLogger(GestureTrayApp.class);
-	
+public class GestureTrayApp extends GestureApplication {
 
 	private static final String ACTION_CMD_EXIT =
 			"app-popup-menu-exit";
@@ -87,22 +62,20 @@ public class GestureTrayApp implements Runnable {
 	private static final String ACTION_CMD_VIEW_LOGS =
 			"app-popup-menu-logFrame";
 	
-	private final String iconFolder = "/icons/";
-	
+	/**
+	 * The current system's system tray.
+	 * @see SystemTray#getSystemTray()
+	 */
+	private static final SystemTray tray = SystemTray.getSystemTray();
 	
 	// Private final member data.
-	private final SystemTray tray = SystemTray.getSystemTray();
-	private final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private final TrayIcon trayIcon;
-	private final String title;
 	
 	// Private member data.
-	private GestureRecognizer gr = null;
-	private VideoCaptureMirrorPanel vcMirror;
-	private VideoCapturePreviewFrame vcPreview = null;
-	//private JFrame cdFrame = null;
 	private JFrame logFrame = null;
-	private List<BufferedImage> icons;
+	private GestureRecognizer gr = null;
+	private HandGestureRobot robot = null;
+	private VideoCapturePreviewFrame vcPreview = null;
 	
 	
 	/**
@@ -121,13 +94,12 @@ public class GestureTrayApp implements Runnable {
 	                                           SecurityException,
 	                                           AWTException
 	{
-		this.title = title;
+		super(title);
 		
 		// Build the pop-up menu for the tray application...
 		final JPopupMenu jmenu = new GestureTrayPopupMenu();
 		
 		// Load the image icon for the tray icon...
-		loadIcons();
 		Image image = getTrayIcon();
 		
 		// Load this application as a tray icon into the system tray...
@@ -157,34 +129,32 @@ public class GestureTrayApp implements Runnable {
 
 	@Override
 	public void run() {
-		trayIcon.displayMessage(title,
-				"Gesture Recognizer loaded and running...",
+		trayIcon.displayMessage(getTitle(),
+				"Gesture Recognizer initializing...",
                 TrayIcon.MessageType.INFO);
 		
-		HandGestureRobot robot = new HandGestureRobot();
+		robot = new HandGestureRobot();
 		logger.debug("Loaded hand gesture robot: " + robot);
 		
 		gr = new handemapper.recognition.GestureRecognizerImpl();
-		vcMirror = new VideoCaptureMirrorPanel(gr.getVideoCaptureImageIcon());
+//		vcMirror = new VideoCaptureMirrorPanel(gr.getVideoCaptureImageIcon());
 		
-		String clsRoot = "/classifiers/";// /Gesture Detection/classifiers
+		/* TODO incorporate the gestures.xml resource to dynamically load the
+		 *      configured gestures to use in this application.
+		 */
+		for (Gesture g : Gestures.load()) {// returns List<Gesture>
+			g.addGestureListener(robot);
+			g.addGestureListener(vcPreview);
+			gr.register(g);
+		}
 		
-		Gesture ag = new handemapper.recognition.types.HandRecognizer("Hand Convexity/Contour Detection");
-		ag.addGestureListener(robot);
-		ag.addGestureListener(vcPreview);
-		gr.register(ag);
-		
-		handemapper.recognition.types.HaarClassifierGesture hc = 
-				new handemapper.recognition.types.HaarClassifierGesture("Frontal Face", "Face detection to capture skin tone from.", false);
-		hc.setClassifier(clsRoot + "haarcascade_frontalface_default.xml");
-		hc.setHighLightColor(Color.RED);
-		gr.register(hc);
+		trayIcon.displayMessage(getTitle(),
+				"Gesture Recognizer loaded and running!",
+                TrayIcon.MessageType.INFO);
 	}
 	
 	
-	/**
-	 * 
-	 */
+	@Override
 	public final void close() {
 		if (gr != null)
 			gr.stop();
@@ -201,46 +171,13 @@ public class GestureTrayApp implements Runnable {
 	
 	/**
 	 * 
-	 */
-	private final void loadIcons() {
-		icons = new LinkedList<BufferedImage>();
-		int[] sizes = { 16, 24, 36, 48 };
-		
-		for (int size : sizes) {
-			try {
-				String imgPath = iconFolder + "trayIcon_"
-						+ size + "x" + size + ".png";
-				icons.add( ImageIO.read( getClass().getResourceAsStream(imgPath) ) );
-			} catch (Exception ignore) { }
-		}
-	}
-	
-	
-	/**
-	 * 
 	 * @return
 	 */
 	private final Image getTrayIcon() {
 		Dimension iconDim = tray.getTrayIconSize();
-		String imgPath = iconFolder + "trayIcon_16x16.png";
-		Image image = null;
+		int size = Math.min(iconDim.height, iconDim.width);
 		
-		int base = Math.min(iconDim.height, iconDim.width);
-		if (base > 42)
-			imgPath.replace("16", "48");
-		else if (base > 31)
-			imgPath.replace("16", "36");
-		else if (base > 20)
-			imgPath.replace("16", "24");
-
-		try {
-			image = ImageIO.read( getClass().getResourceAsStream(imgPath) );
-		}
-		catch (IllegalArgumentException | IOException ex) {
-			logger.error("Unable to load tray icon!");
-			ex.printStackTrace();
-		}
-		return image;
+		return getIcon(size);
 	}
 	
 	
@@ -248,126 +185,18 @@ public class GestureTrayApp implements Runnable {
 	 * 
 	 */
 	private final synchronized void showVideoCapturePreviewFrame() {
-		if (vcPreview == null)
-			vcPreview = new VideoCapturePreviewFrame();
-		
+		if (vcPreview == null) {
+			vcPreview = new VideoCapturePreviewFrame(this, gr);
+		}
 		vcPreview.setVisible(true);
+		logger.debug("Showing video capture frame...");
 	}
 	
 	
 	/**
-	 * 
-	 * @author Chris Hartley
-	 *
-	 */
-	private final class VideoCapturePreviewFrame extends JFrame implements GestureListener {
-		
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 6881309079375182591L;
-
-		
-		// Member data.
-		private Timer refreshTimer = null;
-		private final JLabel leftLbl = new JLabel("");
-		private final JLabel rightLbl = new JLabel("FPS=?");
-		
-		
-		/**
-		 * Constructor for a new instance of the video capture preview frame.
-		 */
-		public VideoCapturePreviewFrame() {
-			super(title + " - Preview");
-			setIconImages(icons);
-			setAlwaysOnTop(true);
-			setVisible(true);
-			setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			build();
-			pack();
-		}
-		
-		
-		/**
-		 * 
-		 */
-		private final void build() {
-			JPanel main = new JPanel( new BorderLayout() );
-			main.add(vcMirror, BorderLayout.CENTER);
-			
-			JPanel statusBar = new JPanel();
-			BoxLayout box = new BoxLayout(statusBar, BoxLayout.X_AXIS);
-			statusBar.setLayout(box);
-			statusBar.add(leftLbl);
-			statusBar.add(Box.createHorizontalGlue());
-			statusBar.add(rightLbl);
-			rightLbl.setHorizontalAlignment(JLabel.RIGHT);
-			main.add(statusBar, BorderLayout.SOUTH);
-			
-			setContentPane(main);
-		}
-		
-		
-		@Override
-		public void setVisible(boolean visible) {
-			super.setVisible(visible);
-			
-			if (visible) {
-				refreshTimer = new Timer("vcRefreshTimer");
-				refreshTimer.scheduleAtFixedRate(getTask(), 1000, 1000);
-			}
-			else if (refreshTimer != null){
-				refreshTimer.cancel();
-			}
-		}
-		
-		
-		/**
-		 * 
-		 * @return
-		 */
-		private final TimerTask getTask() {
-			return new TimerTask() {
-
-				private final String frmt = "FPS=%.02f";
-				
-				@Override
-				public void run() {
-					rightLbl.setText(String.format(frmt, gr.getFPS()));
-				}
-				
-			};
-		}
-		
-		
-		/**
-		 * 
-		 * @param obj
-		 */
-		public final void setStatus(Object obj) {
-			leftLbl.setText(obj != null ? obj.toString() : "");
-		}
-
-		
-		@Override
-		public void gestureDetected(GestureEvent ge) {
-			switch (ge.getID()) {
-			case GestureEvent.CLOSED_HAND_DETECTED:
-				setStatus("Closed Hand");
-				break;
-			case GestureEvent.OPENED_HAND_DETECTED:
-				setStatus("Open Hand");
-				break;
-			default:
-				setStatus("nothing detected");
-			}
-		}
-		
-	}
-	
-	
-	/**
-	 * Request the in use gesture recognition object to re-initialize.
+	 * Request the enabled gesture recognition object(s) to re-initialize.
+	 * @see Gesture#initialize()
+	 * @see Gesture#isEnabled()
 	 */
 	private final synchronized void reinitialize() {
 		final Gesture[] gestures = gr.getGestures();
@@ -376,24 +205,6 @@ public class GestureTrayApp implements Runnable {
 			if (gestures[i] != null && gestures[i].isEnabled())
 				gestures[i].initialize();
 	}
-	
-	/*private final synchronized void showClassifierDetailsFrame() {
-		if (cdFrame != null) {
-			cdFrame.setVisible(true);
-		}
-		else {
-			cdFrame = new JFrame(title + " - Classifier(s)");
-			cdFrame.setIconImages(icons);
-			cdFrame.setContentPane( new ClassifierDetailsPanel(gr) );
-			cdFrame.setAlwaysOnTop(true);
-			cdFrame.setVisible(true);
-			cdFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			cdFrame.pack();
-			cdFrame.setResizable(true);
-			cdFrame.setLocationRelativeTo(null);
-			cdFrame.setVisible(true);
-		}
-	}*/
 	
 	
 	/**
@@ -405,31 +216,13 @@ public class GestureTrayApp implements Runnable {
 	
 	
 	/**
-	 * 
+	 * Shows the LogFrame
 	 */
 	private final synchronized void showLogFrame() {
-		if (logFrame != null) {
-			logFrame.setVisible(true);
+		if (logFrame == null) {
+			logFrame = new LogFrame(this);
 		}
-		else {
-			logFrame = new JFrame(title + " - Logs");
-			logFrame.setIconImages(icons);
-			logFrame.setContentPane( new LogPanel() );
-			logFrame.setAlwaysOnTop(true);
-			logFrame.setVisible(true);
-			logFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			logFrame.pack();
-			logFrame.setResizable(true);
-			
-			Dimension screenDim = toolkit.getScreenSize();
-			Insets screenInsets = toolkit.getScreenInsets(
-					logFrame.getGraphicsConfiguration());
-			
-			logFrame.setLocation(
-					screenDim.width - screenInsets.right - logFrame.getWidth(), 
-					screenDim.height - screenInsets.bottom - logFrame.getHeight() );
-			logFrame.setVisible(true);
-		}
+		logFrame.setVisible(true);
 		logger.debug("Showing log frame...");
 	}
 	
@@ -510,7 +303,7 @@ public class GestureTrayApp implements Runnable {
 			addSeparator();
 			
 			add( registerPopupMenuItem(ACTION_CMD_ALLOW_MOUSE_OVERRIDE,
-					new JCheckBoxMenuItem("Allow gestures to control mouse")) )
+					new JCheckBoxMenuItem("Allow gestures to control mouse", false)) )
 					.setEnabled(false);
 			
 			addSeparator();

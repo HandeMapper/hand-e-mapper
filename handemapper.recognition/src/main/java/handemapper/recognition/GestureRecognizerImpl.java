@@ -22,9 +22,10 @@ import handemapper.common.recognition.GestureRecognizer;
 import handemapper.recognition.GestureRecognizerWorker;
 
 /**
+ * Provides an implementation of the {@link GestureRecognizer} to connect and 
+ * collect image data from a connected camera.
  * 
  * @author Chris Hartley
- *
  */
 public class GestureRecognizerImpl implements GestureRecognizer {
 
@@ -91,10 +92,14 @@ public class GestureRecognizerImpl implements GestureRecognizer {
 	
 	@Override
 	public final Gesture register(Gesture gesture) {
-		if (gesture == null || gestures.containsKey(gesture.getName()))
+		if (gesture == null)
 			return null;
 		
-		gestures.put(gesture.getName(), gesture);
+		final String gName = gesture.getName();
+		synchronized (gestures) {
+			if (!gestures.containsKey(gName))
+				gestures.put(gName, gesture);
+		}
 		return gesture;
 	}
 	
@@ -119,9 +124,10 @@ public class GestureRecognizerImpl implements GestureRecognizer {
 			logger.error("Default device not opened for video capture!");
 			return;
 		}
-		
 		grProcessor = new GestureRecognizerWorker(vcDevice, vcImage, gestures);
 		grProcessor.execute();
+		
+		vcImage.setDescription(grProcessor + "");
 	}
 	
 	
@@ -150,14 +156,20 @@ public class GestureRecognizerImpl implements GestureRecognizer {
 	 */
 	public String[] getGestureNames() {
 		String[] tmp = new String[1];
-		return gestures.keySet().toArray(tmp);
+		synchronized (gestures) {
+			tmp = gestures.keySet().toArray(tmp);
+		}
+		return tmp;
 	}
 	
 	
 	@Override
 	public final Gesture[] getGestures() {
 		Gesture[] tmp = new Gesture[1];
-		return gestures.values().toArray(tmp);
+		synchronized (gestures) {
+			tmp = gestures.values().toArray(tmp);
+		}
+		return tmp;
 	}
 
 

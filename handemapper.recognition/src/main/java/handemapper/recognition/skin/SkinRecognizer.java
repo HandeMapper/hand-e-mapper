@@ -14,5 +14,12 @@ public interface SkinRecognizer {
 	public static final String CbMIN = "CbMin";
 	public static final String CbMAX = "CbMax";
 	
+	/**
+	 * Returns a map of the detected skin regions from the specified {@code Mat}
+	 * parameter for this particular implementation.
+	 * @param mat  the {@code Mat} containing the graphic data to analyze for
+	 *             skin detection.
+	 * @return
+	 */
 	public Map<String, Integer> detectSkin(Mat mat);
 }

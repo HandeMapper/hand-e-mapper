@@ -78,8 +78,8 @@ public class EventQueue extends PriorityQueue<GestureEvent> {
 
 		@Override
 		public int compare(GestureEvent ge1, GestureEvent ge2) {
-			long t1 = ge1 != null ? ge1.getWhen() : 0l;
-			long t2 = ge2 != null ? ge2.getWhen() : 0l;
+			final long t1 = ge1 != null ? ge1.getWhen() : 0l;
+			final long t2 = ge2 != null ? ge2.getWhen() : 0l;
 			
 			return (int)(t1 - t2);
 		}

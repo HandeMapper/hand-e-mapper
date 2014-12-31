@@ -1,23 +1,30 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>intel.handemapper.org</groupId>
     <artifactId>handemapper.parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <artifactId>handemapper.recognition</artifactId>
   <name>Hand-e-Mapper Recognition</name>
   <description>Provides the recognition API and intergration with the Java implementation of OpenCV.</description>
+  <version>${handemapper.recognition.version}</version>
+  
   <dependencies>
-  	<dependency>
-  		<groupId>intel.handemapper.org</groupId>
-  		<artifactId>handemapper.opencv</artifactId>
-  		<version>${parent.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>intel.handemapper.org</groupId>
-  		<artifactId>handemapper.common</artifactId>
-  		<version>${parent.version}</version>
-  	</dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>handemapper.opencv</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>handemapper.common</artifactId>
+    </dependency>
   </dependencies>
+  
 </project>

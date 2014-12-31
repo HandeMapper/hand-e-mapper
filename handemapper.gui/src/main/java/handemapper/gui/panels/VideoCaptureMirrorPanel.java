@@ -5,6 +5,7 @@ package handemapper.gui.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -65,15 +66,24 @@ public class VideoCaptureMirrorPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
+		final FontMetrics fm = g2d.getFontMetrics();
 		final Insets ins = getInsets();
-		final int x = ins.left;
-		final int y = ins.top;
+		int x = ins.left;
+		int y = ins.top;
 		final int w = getWidth() - x - ins.right;
 		final int h = getHeight() - y - ins.bottom;
 		
 		synchronized (updateLock) {
 			if (vcVideoImage != null && vcVideoImage.getImage() != null) {
 				g2d.drawImage(vcVideoImage.getImage(), x, y, w, h, this);
+				g2d.setColor(getForeground());
+				
+				x += fm.getHeight();
+				y += fm.getHeight();
+				g2d.drawString(vcVideoImage.getDescription() + "", x, y);
+				
+				y += fm.getHeight();
+				g2d.drawString(vcVideoImage.getIconWidth() + "x" + vcVideoImage.getIconHeight(), x, y);
 			}
 			else {
 				g2d.drawImage(vcOffline, x, y, w, h, this);

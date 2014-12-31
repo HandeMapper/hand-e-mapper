@@ -16,6 +16,9 @@ public final class OpenCvNativeLibrary {
 
 	private static final String openCV_Version = "2.4.9";
 	private static final String baseDir = "/native/opencv/" + openCV_Version + "/";
+	static {
+		System.out.println("opencv version=" + System.getProperty("opencv.java.version"));
+	}
 	
 	
 	public static boolean load() {

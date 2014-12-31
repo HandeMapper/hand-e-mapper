@@ -55,10 +55,10 @@ public class FaceHistogramRecognizer implements SkinRecognizer {
          cb = total3 / elements2Total;
       }
       Map<String, Integer> colorMap = new HashMap<>();
-      colorMap.put("CrMin", cr - 20);
-      colorMap.put("CrMax", cr + 20);
-      colorMap.put("CbMin", cb - 20);
-      colorMap.put("CbMax", cb + 20);
+      colorMap.put(CrMIN, cr - 20);
+      colorMap.put(CrMAX, cr + 20);
+      colorMap.put(CbMIN, cb - 20);
+      colorMap.put(CbMAX, cb + 20);
       return colorMap;
    }
 }

@@ -61,6 +61,7 @@ public class HandGestureRobot implements GestureListener {
 			bot = new Robot();
 		}
 		catch (AWTException e) {
+			logger.error("Unable to create the robot", e);
 			e.printStackTrace();
 		}
 		finally {
@@ -191,7 +192,4 @@ public class HandGestureRobot implements GestureListener {
 			gRobot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 	}
 	
-	
-	
-
 }

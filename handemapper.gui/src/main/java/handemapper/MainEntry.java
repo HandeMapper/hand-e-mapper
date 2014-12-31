@@ -1,19 +1,23 @@
 /**
  * Hand Gesture Detection with OpenCV
  * Group Project - CSC 484, Winter Quarter 2014
- * California Polytechnic State University, SLO
- * 
- * Team members:
- *   Chris Hartley (cnhartle@calpoly.edu)
- *   Adin Miller   (amille@calpoly.edu)
- *   Shubham Kahal (observer)
+ * California Polytechnic State University, San Luis Obispo
  * 
  * Collaboration with:
  *   Carmen Badea, Intel Corp. (carmen.t.badea@intel.com)
  * 
+ * Project Facilty Advisor:
+ *   Franz J. Kurfess (fkurfess@calpoly.edu)
+ * 
+ * Team members:
+ *   @author Chris Hartley (cnhartle@calpoly.edu)
+ *   @author Adin Miller   (amille@calpoly.edu)
+ *   @author Shubham Kahal (observer)
+ * 
  * Abstract:
  * ...
  * 
+ *
  */
 package handemapper;
 
@@ -22,6 +26,7 @@ import handemapper.opencv.loader.OpenCvNativeLibrary;
 
 import java.awt.AWTException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -141,7 +146,7 @@ public final class MainEntry {
 	 * @param args
 	 */
 	private static final void parseCommandLineParameters(String[] args) {
-		final ArrayList<String> params = new ArrayList<String>();
+		final List<String> params = new ArrayList<String>();
 		for (String arg : args)
 			params.add(arg);
 		

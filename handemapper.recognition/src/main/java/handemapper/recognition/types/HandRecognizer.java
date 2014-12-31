@@ -24,6 +24,7 @@ import handemapper.common.recognition.event.GestureEvent;
 
 /**
  * 
+ * @author Adin Miller
  * @author Chris Hartley
  */
 public class HandRecognizer extends AbstractGesture {
@@ -45,14 +46,15 @@ public class HandRecognizer extends AbstractGesture {
 	 * 
 	 */
 	private static final long serialVersionUID = -4630440503905990319L;
-	private static final int recentStatesMemCapacity = 5;
-	// TODO It'd probably be a good idea to add a treshold + or - button to the GUI
+	
+//	private static final int recentStatesMemCapacity = 5;
+	/* TODO It'd probably be a good idea to add a treshold + or - button to the GUI */
 	private static final double movementThreshold = 10.0;
 	
 	private static final boolean showSkinImg = false;
 	
-	private Scalar ycrcbPresetMin = new Scalar(0, 131, 80);
-	private Scalar ycrcbPresetMax = new Scalar(255, 185, 135);
+	private static final Scalar ycrcbPresetMin = new Scalar(0, 131, 80);
+	private static final Scalar ycrcbPresetMax = new Scalar(255, 185, 135);
 	private Scalar ycrcbMin = ycrcbPresetMin;
 	private Scalar ycrcbMax = ycrcbPresetMax;
 	
@@ -72,44 +74,48 @@ public class HandRecognizer extends AbstractGesture {
 	private int[] defectsArray = {};
 	MatOfPoint biggestContour = null;
 
-	private enum GestureType {
-		GRAB, DROP, DRAG, CLICK, THROW, UNKNOWN
-	};
-	private GestureType currentGesture = GestureType.UNKNOWN;
+//	private enum GestureType {
+//		GRAB, DROP, DRAG, CLICK, THROW, UNKNOWN
+//	};
+//	private GestureType currentGesture = GestureType.UNKNOWN;
 	
-	private enum HandState {
-		OPEN, CLOSED, MOVING_OPEN, MOVING_CLOSED, OTHER
-	};
-	private HandState currentState = HandState.OTHER;
+//	private enum HandState {
+//		OPEN, CLOSED, MOVING_OPEN, MOVING_CLOSED, OTHER
+//	};
+//	private HandState currentState = HandState.OTHER;
 	private Point currentPos = new Point();
 	private double currentArea = 0.0;
 	
 	
-	private class HandInfo {
-		private HandState state; // Indicates state of hand (for gestures)
-		private Point position; // Indicates position of center of hand (for positioning mouse input)
-		private double area; // Indicates size of hand (for identifying throw gesture)
-		
-		public HandInfo(HandState state, Point position, double area) {
-			this.state = state;
-			this.position = position;
-			this.area = area;
-		}
-		
-		public HandState getState() {
-			return this.state;
-		}
-		
-		public Point getPosition() {
-			return this.position;
-		}
-		
-		public double getArea() {
-			return this.area;
-		}
-	}
+//	private class HandInfo {
+//		private HandState state; // Indicates state of hand (for gestures)
+//		private Point position; // Indicates position of center of hand (for positioning mouse input)
+//		private double area; // Indicates size of hand (for identifying throw gesture)
+//		
+//		public HandInfo(HandState state, Point position, double area) {
+//			this.state = state;
+//			this.position = position;
+//			this.area = area;
+//		}
+//		
+//		public HandState getState() {
+//			return this.state;
+//		}
+//		
+//		public Point getPosition() {
+//			return this.position;
+//		}
+//		
+//		public double getArea() {
+//			return this.area;
+//		}
+//	}
 	
 	//private SizedStack<HandInfo> pastHandInfo = new SizedStack<HandInfo>(recentStatesMemCapacity); 
+	
+	public HandRecognizer() {
+		super();
+	}
 	
 	public HandRecognizer(String name) {
 		super(name);

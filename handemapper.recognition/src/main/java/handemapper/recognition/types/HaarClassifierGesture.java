@@ -47,6 +47,15 @@ public class HaarClassifierGesture extends AbstractGesture {
 	
 	
 	/**
+	 * Constructor for a new instance of this gesture with the name set to a 
+	 * universally unique identifier (UUID) string.
+	 */
+	public HaarClassifierGesture() {
+		super();
+	}
+	
+	
+	/**
 	 * Constructor for a new instance with the specified name. This constructs
 	 * a gesture that is by default enabled.
 	 * 

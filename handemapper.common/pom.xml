@@ -1,18 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <groupId>intel.handemapper.org</groupId>
     <artifactId>handemapper.parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+  
   <artifactId>handemapper.common</artifactId>
   <name>Hand-e-Mapper Common API</name>
   <description>Provides the standard API common between all sub projects of the Hand-e-Mapper recognition software.</description>
+  <version>${handemapper.common.version}</version>
+  
   <dependencies>
-  	<dependency>
-  		<groupId>intel.handemapper.org</groupId>
-  		<artifactId>handemapper.opencv</artifactId>
-  		<version>${parent.version}</version>
-  	</dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>handemapper.opencv</artifactId>
+    </dependency>
   </dependencies>
+
 </project>

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>intel.handemapper.org</groupId>
@@ -9,6 +9,18 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Hand-e-Mapper Parent</name>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.compiler.version>1.7</java.compiler.version>
+    <opencv.java.version>2.4.9-7</opencv.java.version>
+    <log4j.version>1.2.17</log4j.version>
+    
+    <handemapper.opencv.version>0.0.1-SNAPSHOT</handemapper.opencv.version>
+    <handemapper.gui.version>0.0.1-SNAPSHOT</handemapper.gui.version>
+    <handemapper.recognition.version>0.0.1-SNAPSHOT</handemapper.recognition.version>
+    <handemapper.common.version>0.0.1-SNAPSHOT</handemapper.common.version>
+  </properties>
   
   <organization>
   	<name>California Polytechnic State University</name>
@@ -98,13 +110,6 @@
     </contributor>
   </contributors>
   
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.compiler.version>1.7</java.compiler.version>
-    <opencv.java.version>2.4.9-7</opencv.java.version>
-    <log4j.version>1.2.17</log4j.version>
-  </properties>
-  
   <modules>
     <module>handemapper.opencv</module>
     <module>handemapper.gui</module>
@@ -114,8 +119,8 @@
   
   <pluginRepositories>
     <pluginRepository>
-        <id>onejar-maven-plugin.googlecode.com</id>
-        <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+      <id>onejar-maven-plugin.googlecode.com</id>
+      <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
     </pluginRepository>
   </pluginRepositories>
   
@@ -168,6 +173,35 @@
     </plugins>
   </build>
   
+  <dependencyManagement>
+    <dependencies>
+  	  <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>handemapper.common</artifactId>
+  		<version>${handemapper.common.version}</version>
+  	  </dependency>
+  	  <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>handemapper.gui</artifactId>
+  		<version>${handemapper.gui.version}</version>
+  	  </dependency>
+      <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>handemapper.opencv</artifactId>
+  		<version>${handemapper.opencv.version}</version>
+      </dependency>
+  	  <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>handemapper.recognition</artifactId>
+  		<version>${handemapper.recognition.version}</version>
+  	  </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   
   <dependencies>
     <dependency>
@@ -177,9 +211,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>${log4j.version}</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
     </dependency>
   </dependencies>
   
