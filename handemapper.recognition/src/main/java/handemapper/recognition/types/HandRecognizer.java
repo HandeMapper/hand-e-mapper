@@ -28,14 +28,6 @@ import handemapper.common.recognition.event.GestureEvent;
  * @author Chris Hartley
  */
 public class HandRecognizer extends AbstractGesture {
-
-	/*private class NullContourException extends Exception {
-		public NullContourException() { super(); }
-		public NullContourException(String message) { super(message); }
-		public NullContourException(String message, Throwable cause) { super(message, cause); }
-		public NullContourException(Throwable cause) { super(cause); }
-	}*/
-	
 	
 	// Add a initialize function to AbstractGesture to set calibration flag
 		// Thus GestureRecognizerWorker will grab skin color if calibration flag isn't set
@@ -47,9 +39,8 @@ public class HandRecognizer extends AbstractGesture {
 	 */
 	private static final long serialVersionUID = -4630440503905990319L;
 	
-//	private static final int recentStatesMemCapacity = 5;
 	/* TODO It'd probably be a good idea to add a treshold + or - button to the GUI */
-	private static final double movementThreshold = 10.0;
+//	private static final double movementThreshold = 10.0;
 	
 	private static final boolean showSkinImg = false;
 	
@@ -74,15 +65,6 @@ public class HandRecognizer extends AbstractGesture {
 	private int[] defectsArray = {};
 	MatOfPoint biggestContour = null;
 
-//	private enum GestureType {
-//		GRAB, DROP, DRAG, CLICK, THROW, UNKNOWN
-//	};
-//	private GestureType currentGesture = GestureType.UNKNOWN;
-	
-//	private enum HandState {
-//		OPEN, CLOSED, MOVING_OPEN, MOVING_CLOSED, OTHER
-//	};
-//	private HandState currentState = HandState.OTHER;
 	private Point currentPos = new Point();
 	private double currentArea = 0.0;
 	
@@ -312,7 +294,9 @@ public class HandRecognizer extends AbstractGesture {
 			
 			// Counts the number of fingers in the image
             // Author's note: Custom heuristic based on some experiment, double check it before use
-            if (/*(startPoint.y < enclosingRect.center.y || depthPoint.y < enclosingRect.center.y) && */(startPoint.y < depthPoint.y) && (Math.sqrt(Math.pow(startPoint.x - depthPoint.x, 2) + Math.pow(startPoint.y - depthPoint.y, 2)) > enclosingRect.size.height / 6.5))
+            if (/*(startPoint.y < enclosingRect.center.y || depthPoint.y < enclosingRect.center.y)
+            	&& */(startPoint.y < depthPoint.y)
+            	&& (Math.sqrt(Math.pow(startPoint.x - depthPoint.x, 2) + Math.pow(startPoint.y - depthPoint.y, 2)) > enclosingRect.size.height / 6.5))
             //if((startPoint.y < depthPoint.y))
             {
             	cogShapePts.add(depthPoint);
@@ -391,92 +375,20 @@ public class HandRecognizer extends AbstractGesture {
 		return this.ycrcbMin;
 	}
 	
+	
 	public Scalar getYCrCbMax() {
 		return this.ycrcbMax;
 	}
+	
 	
 	public void setYCrCbMin(Scalar ycrcbMin) {
 		this.ycrcbMin = ycrcbMin;
 	}
 	
+	
 	public void setYCrCbMax(Scalar ycrcbMax) {
 		this.ycrcbMax = ycrcbMax;
 	}
-	
-	/*
-	public void identifyGesture(SizedStack<HandInfo> pastHandInfo) {
-		HandInfo recentHI = pastHandInfo.peek(); // The most recent HandInfo
-		HandInfo prevHI = pastHandInfo.get(1); // The previous, 2nd-most recent HandInfo
-		
-		/**
-		 * Problems:
-		 * - How to distinguish between click and grab?
-		 * 
-		 *
-		
-		switch(prevHI.getState()) {
-			case OPEN:
-				switch(recentHI.getState()) {
-					case CLOSED:
-						this.currentGesture = GestureType.CLICK;
-						break;
-					case MOVING_OPEN:
-						// Move mouse case
-						break;
-					default:
-						break;
-				}
-				
-				break;
-			case CLOSED:
-				switch(recentHI.getState()) {
-					case OPEN:
-						/*if(pastHandInfo.get(2).getState() == HandState.OPEN)
-							
-						else*
-							this.currentGesture = GestureType.DROP;
-						break;
-					case CLOSED:
-						this.currentGesture = GestureType.GRAB;
-						break;
-					case MOVING_CLOSED:
-						this.currentGesture = GestureType.DRAG;
-						break;
-					default:
-						break;
-				}
-				
-				break;
-			case MOVING_OPEN:
-				switch(recentHI.getState()) {
-					case MOVING_OPEN:
-						// Still move mouse case
-						break;
-					/*case MOVING_CLOSED:
-						this.currentGesture = GestureType.DRAG;
-						break;*
-					default:
-						break;
-				}
-			
-				break;
-			case MOVING_CLOSED:
-				switch(recentHI.getState()) {
-					case MOVING_OPEN:
-						this.currentGesture = GestureType.THROW;
-						break;
-					case MOVING_CLOSED:
-						this.currentGesture = GestureType.DRAG;
-						break;
-					default:
-						break;
-				}
-			
-				break;
-			default:
-				break;
-		}
-	}*/
 	
 	
 	public ArrayList<Point> findCirclePoints(ArrayList<Point> pts) {
@@ -506,56 +418,15 @@ public class HandRecognizer extends AbstractGesture {
 	
 	public ArrayList<Point> findLowestPoints(ArrayList<Point> pts) {
 		ArrayList<Point> lowPts = new ArrayList<Point>();
-		Point lowPt1 = null;//, lowPt2 = null;
-		
-		//System.out.println(pts.toString());
+		Point lowPt1 = null;
 		
 		for(Point pt : pts) {
 			if(lowPt1 == null || pt.y > lowPt1.y)
 				lowPt1 = pt.clone();
-			//else if(lowPt2 == null || pt.y > lowPt2.y)
-				//lowPt2 = pt.clone();
 		}
 		
 		lowPts.add(lowPt1);
-		//lowPts.add(lowPt2);
-		
-		//System.out.println(lowPts.toString());
-		
 		return lowPts;
 	}
 	
-	
-	/**
-	 * Obtains the current String value of the hand state enumerator, hState
-	 * 
-	 * @return String value of hState
-	 *
-	public String getCurrentHandStateValue() {
-		String output = "";
-		
-		if(!pastHandInfo.isEmpty())
-			output = pastHandInfo.peek().toString();
-		else
-			output = "Stack is empty";
-		
-		return output;
-	}//*/
-	
-	
-	/**
-	 * Obtains a String listing all the state currently in the HandState FixedStack, recentStates
-	 * 
-	 * @return String list of HandStates in recentStates
-	 *
-	public String getRecentHandStatesList() {
-		String output = "";
-		
-		if(!pastHandInfo.isEmpty())
-			output = pastHandInfo.toString();
-		else
-			output = "Stack is empty";
-		
-		return output;
-	}/*/
 }

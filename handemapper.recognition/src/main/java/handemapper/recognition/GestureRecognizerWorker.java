@@ -4,6 +4,7 @@
 package handemapper.recognition;
 
 import handemapper.common.recognition.Gesture;
+import handemapper.recognition.utils.Updater;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -15,12 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.SwingWorker;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.highgui.Highgui;
@@ -60,7 +59,7 @@ public class GestureRecognizerWorker extends SwingWorker<Void, Long> {
 	
 	// Private member fields.
 	private final int frameAvg = 8;
-	private final ImageIcon imgIcon;
+	private final Updater<BufferedImage> imgUpdater;
 	private final Map<String,Gesture> gestures;
 	private final MatOfByte matrixBuffer = new MatOfByte();
 	private final AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
@@ -71,7 +70,7 @@ public class GestureRecognizerWorker extends SwingWorker<Void, Long> {
 	private long fpsLimitTime = 1000 / fpsLimit;
 	private VideoCapture camera;
 	private AffineTransformOp op = null;
-	
+
 	
 	/**
 	 * Constructor for a new instance with the specified video capture device,
@@ -82,13 +81,13 @@ public class GestureRecognizerWorker extends SwingWorker<Void, Long> {
 	 * @param imgIcon
 	 * @param gestures2
 	 */
-	public GestureRecognizerWorker(VideoCapture camera, ImageIcon imgIcon,
-			Map<String,Gesture> gestures)
+	public GestureRecognizerWorker(Updater<BufferedImage> imgUpdater,
+			VideoCapture camera, Map<String,Gesture> gestures)
 	{
 		super();
 		
 		this.camera = camera;
-		this.imgIcon = imgIcon;
+		this.imgUpdater = imgUpdater;
 		this.gestures = gestures;
 		
 		logger.debug("Initializing " + getClass().getSimpleName());
@@ -208,7 +207,7 @@ public class GestureRecognizerWorker extends SwingWorker<Void, Long> {
 						AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 			}
 			
-			imgIcon.setImage(op.filter(bufferImg, null));
+			imgUpdater.update(op.filter(bufferImg, null));
 		}
 		catch(IOException ex) {
 			if (!isCancelled())
@@ -221,7 +220,6 @@ public class GestureRecognizerWorker extends SwingWorker<Void, Long> {
 	protected void process(List<Long> times) {
 		for (long milli : times) {
 			fps = frameAvg * 1000.0 / milli;
-			//System.out.println("FPS=" + fps);
 		}
 	}
 
