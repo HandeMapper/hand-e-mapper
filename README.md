@@ -4,8 +4,8 @@ Project detects a users hand gestures of moving, grabbing, dragging, and droppin
 
 This GitHub Repo
 ----------------
-In the master branch of this repository, the workspace folder should be pulled in to your local computer system and can be opened as an Eclipse workspace. This workspace contains the main projects for the application.
+This repository contains the Apache Maven parent project which includes; commons, demonstration GUI, OpenCV dynamic library loader, and the recognition sub-projects. It is recommended to implement a separate GUI and exclude the GUI project dependency and simply use the interfaces provided in the commons sub-project.
 
 Project Background and Overview
 -------------------------------
-This project involves a joint collaboration between the Computer Science Department at California Polytechnic State University in San Luis Obispo and the Intel Corporation. Our contact from Intel Corp., provides the primary focus and objectives for this project which involves the use of a basic web camera to detect the gesture of "throwing" virtual objects on a computer and/or mobile device. This focus requires the use of computer vision software to attempt to detect the generalized gestures of throwing.
+This project involves a joint collaboration between the Computer Science Department at California Polytechnic State University in San Luis Obispo and the Intel Corporation. Use of this software is detailed under the BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause). Our contact from Intel provides the primary focus and objectives for this project which involves the use of a basic web camera to detect the gesture of "throwing" virtual objects on a computer and/or mobile device. This focus requires the use of computer vision software to attempt to detect the generalized gestures of throwing.
