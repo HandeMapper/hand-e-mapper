@@ -172,7 +172,7 @@ public class VideoCapturePreviewFrame extends JFrame implements GestureListener,
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(PROPERTY_NAME_CAPTURE)
+		if (PROPERTY_NAME_CAPTURE.equals(evt.getPropertyName())
 				&& vcMirror != null)
 		{
 			vcMirror.updateImage((BufferedImage)evt.getNewValue());
