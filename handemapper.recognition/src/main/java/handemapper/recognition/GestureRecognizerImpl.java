@@ -6,9 +6,11 @@ package handemapper.recognition;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -202,10 +204,13 @@ public class GestureRecognizerImpl implements GestureRecognizer {
 	
 	
 	@Override
-	public final Gesture[] getGestures() {
-		Gesture[] tmp = new Gesture[1];
+	public final List<Gesture> getGestures() {
+		List<Gesture> tmp;
 		synchronized (gestures) {
-			tmp = gestures.values().toArray(tmp);
+			if (gestures.isEmpty())
+				tmp = Collections.<Gesture>emptyList();
+			else
+				tmp = new ArrayList<Gesture>(gestures.values());
 		}
 		return tmp;
 	}

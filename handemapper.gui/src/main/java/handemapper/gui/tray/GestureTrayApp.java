@@ -199,11 +199,11 @@ public class GestureTrayApp extends GestureApplication {
 	 * @see Gesture#isEnabled()
 	 */
 	private final synchronized void reinitialize() {
-		final Gesture[] gestures = gr.getGestures();
-		
-		for (int i = 0; i < gestures.length; i++)
-			if (gestures[i] != null && gestures[i].isEnabled())
-				gestures[i].initialize();
+		for (Gesture gesture : gr.getGestures()) {
+			if (gesture != null && gesture.isEnabled()) {
+				gesture.initialize();
+			}
+		}
 	}
 	
 	

@@ -7,18 +7,20 @@ import handemapper.common.recognition.device.DeviceInfo;
 
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 
 /**
  * Provides an interface for any implementations for a gesture recognition 
- * process.
+ * process. This also contains enumerations for the various {@link State}s and
+ * {@link Property}s used by implementations of this interface.
  * @author Chris Hartley
  */
 public interface GestureRecognizer {
 
 	/**
 	 * Provides a enumeration of the possible states for this interface.
-	 * @author Chris
+	 * @author Chris Hartley
 	 */
 	public enum State {
 		
@@ -72,7 +74,7 @@ public interface GestureRecognizer {
 	/**
 	 * Provides an enumeration of the property change event types that contains
 	 * their respective property name, accessible through {@link #toString()}.
-	 * @author Chris
+	 * @author Chris Hartley
 	 */
 	public enum Property {
 		
@@ -96,16 +98,21 @@ public interface GestureRecognizer {
 		
 		/**
 		 * Private constructor for a new instance of a {@link Property}.
-		 * @param propName
+		 * @param propName the {@link String} name for the property.
 		 */
 		private Property(String propName) {
 			this.propName = propName;
 		}
 		
+		
+		/**
+		 * Overrides the {@link Enum#toString()} and returns the property name.
+		 */
 		@Override
 		public String toString() {
 			return this.propName;
 		}
+		
 	}
 	
 	
@@ -129,8 +136,10 @@ public interface GestureRecognizer {
 	/**
 	 * Registers the specified {@link Gesture} to this implementation of the 
 	 * gesture recognizer for processing.
-	 * @param gesture
-	 * @return
+	 * @param gesture the {@link Gesture} to register.
+	 * @return  the {@link Gesture} when registered successfully; otherwise, 
+	 *          returns {@code null} if the specified gesture could not be
+	 *          registered.
 	 */
 	public Gesture register(Gesture gesture);
 	
@@ -138,9 +147,10 @@ public interface GestureRecognizer {
 	/**
 	 * Returns an array of all registered {@link Gesture}s to this 
 	 * implementation of a gesture recognizer.
-	 * @return
+	 * @return  a {@link List} of {@link Gesture}s registered to this 
+	 *          implementation of the gesture recognizer.
 	 */
-	public Gesture[] getGestures();
+	public List<Gesture> getGestures();
 
 	
 	/**
@@ -148,7 +158,7 @@ public interface GestureRecognizer {
 	 * properties that may change are; "status" [INITIALIZING, STARTED, CANCELED,
 	 * TERMINATED, PAUSED, ERROR], "capture" as a new video capture frame of 
 	 * type [org.opencv.core.Mat])
-	 * @param pcl
+	 * @param pcl  the {@link PropertyChangeListener} to be added.
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener pcl);
 
@@ -156,14 +166,14 @@ public interface GestureRecognizer {
 	/**
 	 * Removes the specified property change listener from this implementation.
 	 * This does nothing if the property change listener has not been added.
-	 * @param pcl
+	 * @param pcl  the {@link PropertyChangeListener} to be removed.
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener pcl);
 	
 	
 	/**
 	 * Returns the current video capture device information object.
-	 * @return
+	 * @return  the {@link DeviceInfo} for the connected device.
 	 */
 	public DeviceInfo getDeviceInfo();
 
